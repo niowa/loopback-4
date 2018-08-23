@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="b16e1358-b620-4014-ae14-8bdd965f51f8" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -110,6 +111,8 @@
       <find>@api</find>
       <find>save</find>
       <find>authenticate</find>
+      <find>ide</find>
+      <find>node</find>
     </findStrings>
     <dirStrings>
       <dir>$PROJECT_DIR$/node_modules</dir>
@@ -172,35 +175,6 @@
               <item name="loopback-4" type="b2602c69:ProjectViewProjectNode" />
               <item name="loopback-4" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="loopback-4" type="b2602c69:ProjectViewProjectNode" />
-              <item name="loopback-4" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="loopback-4" type="b2602c69:ProjectViewProjectNode" />
-              <item name="loopback-4" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="controllers" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="loopback-4" type="b2602c69:ProjectViewProjectNode" />
-              <item name="loopback-4" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="datasources" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="loopback-4" type="b2602c69:ProjectViewProjectNode" />
-              <item name="loopback-4" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="models" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="loopback-4" type="b2602c69:ProjectViewProjectNode" />
-              <item name="loopback-4" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="repositories" type="462c0819:PsiDirectoryNode" />
-            </path>
           </expand>
           <select />
         </subPane>
@@ -238,12 +212,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1534949753688</updated>
-      <workItem from="1534949755120" duration="10908000" />
+      <workItem from="1534949755120" duration="11430000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="10908000" />
+    <option name="totallyTimeSpent" value="11430000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1440" y="23" width="1920" height="977" extended-state="0" />
