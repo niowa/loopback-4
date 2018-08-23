@@ -1,9 +1,11 @@
 import { Filter, Where } from '@loopback/repository';
 import { Products } from '../models';
 import { ProductsRepository } from '../repositories';
+import { User } from '../constants/interfaces';
 export declare class ProductsController {
     productsRepository: ProductsRepository;
-    constructor(productsRepository: ProductsRepository);
+    private user;
+    constructor(productsRepository: ProductsRepository, user: User);
     create(obj: Products): Promise<Products>;
     count(where?: Where): Promise<number>;
     find(filter?: Filter): Promise<Products[]>;

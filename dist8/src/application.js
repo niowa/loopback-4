@@ -8,9 +8,14 @@ const boot_1 = require("@loopback/boot");
 // juggler imports are required to infer types for RepositoryMixin!
 const repository_1 = require("@loopback/repository");
 /* tslint:enable:no-unused-variable */
+const authentication_1 = require("@loopback/authentication");
+const auth_strategy_provider_1 = require("./providers/auth-strategy.provider");
 class Loopback4Application extends boot_1.BootMixin(repository_1.RepositoryMixin(rest_1.RestApplication)) {
     constructor(options) {
         super(options);
+        this.projectRoot = __dirname;
+        this.component(authentication_1.AuthenticationComponent);
+        this.bind(authentication_1.AuthenticationBindings.STRATEGY).toProvider(auth_strategy_provider_1.MyAuthStrategyProvider);
         // Set up the custom sequence
         this.sequence(sequence_1.MySequence);
         this.projectRoot = __dirname;

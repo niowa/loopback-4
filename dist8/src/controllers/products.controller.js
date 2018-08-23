@@ -12,14 +12,17 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const context_1 = require("@loopback/context");
 const repository_1 = require("@loopback/repository");
 const rest_1 = require("@loopback/rest");
 const models_1 = require("../models");
 const repositories_1 = require("../repositories");
+const authentication_1 = require("@loopback/authentication");
 const uuid_1 = require("uuid");
 let ProductsController = class ProductsController {
-    constructor(productsRepository) {
+    constructor(productsRepository, user) {
         this.productsRepository = productsRepository;
+        this.user = user;
     }
     async create(obj) {
         obj.id = uuid_1.v4();
@@ -29,9 +32,8 @@ let ProductsController = class ProductsController {
         return await this.productsRepository.count(where);
     }
     async find(filter) {
-        const result = await this.productsRepository.find(filter);
-        console.log(result);
-        throw new rest_1.HttpErrors.UnprocessableEntity('kek');
+        // throw new HttpErrors.UnprocessableEntity('kek');
+        return this.productsRepository.find(filter);
     }
     async updateAll(obj, where) {
         return await this.productsRepository.updateAll(obj, where);
@@ -61,6 +63,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ProductsController.prototype, "count", null);
 __decorate([
+    authentication_1.authenticate('JwtStrategy'),
     rest_1.get('/products'),
     __param(0, rest_1.param.query.string('filter')),
     __metadata("design:type", Function),
@@ -99,7 +102,8 @@ __decorate([
 ], ProductsController.prototype, "deleteById", null);
 ProductsController = __decorate([
     __param(0, repository_1.repository(repositories_1.ProductsRepository)),
-    __metadata("design:paramtypes", [repositories_1.ProductsRepository])
+    __param(1, context_1.inject(authentication_1.AuthenticationBindings.CURRENT_USER)),
+    __metadata("design:paramtypes", [repositories_1.ProductsRepository, Object])
 ], ProductsController);
 exports.ProductsController = ProductsController;
 //# sourceMappingURL=products.controller.js.map

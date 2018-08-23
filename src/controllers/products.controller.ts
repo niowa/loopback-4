@@ -1,3 +1,4 @@
+import {inject} from '@loopback/context';
 import {Filter, Where, repository} from '@loopback/repository';
 import {
   post,
@@ -10,12 +11,18 @@ import {
 } from '@loopback/rest';
 import {Products} from '../models';
 import {ProductsRepository} from '../repositories';
+import {
+  authenticate,
+  AuthenticationBindings,
+} from '@loopback/authentication';
+import {User} from '../constants/interfaces';
 import { v4 as uuid } from 'uuid';
 
 export class ProductsController {
   constructor(
     @repository(ProductsRepository)
     public productsRepository : ProductsRepository,
+    @inject(AuthenticationBindings.CURRENT_USER) private user: User,
   ) {}
 
   @post('/products')
@@ -30,12 +37,12 @@ export class ProductsController {
     return await this.productsRepository.count(where);
   }
 
+  @authenticate('JwtStrategy')
   @get('/products')
   async find(@param.query.string('filter') filter?: Filter)
     : Promise<Products[]> {
-    const result = await this.productsRepository.find(filter);
-    console.log(result);
-    throw new HttpErrors.UnprocessableEntity('kek');
+    // throw new HttpErrors.UnprocessableEntity('kek');
+    return this.productsRepository.find(filter);
   }
 
   @patch('/products')
