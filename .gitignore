@@ -1,4 +1,4 @@
-idea/
+.idea/
 
 # Logs
 logs
@@ -64,3 +64,4 @@ api-docs/
 
 # Transpiled JavaScript files from Typescript
 dist/
+dist8/

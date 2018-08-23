@@ -1,6 +1,5 @@
 import {ApplicationConfig} from '@loopback/core';
 import {RestApplication} from '@loopback/rest';
-import { } from '@loopback/authenti'
 import {MySequence} from './sequence';
 
 /* tslint:disable:no-unused-variable */
@@ -16,11 +15,22 @@ import {
 } from '@loopback/repository';
 /* tslint:enable:no-unused-variable */
 
+import {
+  AuthenticationComponent,
+  AuthenticationBindings,
+} from '@loopback/authentication';
+import {MyAuthStrategyProvider} from './providers/auth-strategy.provider';
+
 export class Loopback4Application extends BootMixin(
   RepositoryMixin(RestApplication),
 ) {
   constructor(options?: ApplicationConfig) {
     super(options);
+    this.projectRoot = __dirname;
+    this.component(AuthenticationComponent);
+    this.bind(AuthenticationBindings.STRATEGY).toProvider(
+      MyAuthStrategyProvider,
+    );
 
     // Set up the custom sequence
     this.sequence(MySequence);
