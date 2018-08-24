@@ -6,6 +6,9 @@ import {
 } from '@loopback/authentication';
 import {ExtractJwt} from 'passport-jwt';
 import {User} from '../constants/interfaces';
+import {UsersRepository} from '../repositories';
+import {repository} from '@loopback/repository';
+import {GeneratedToken} from '../constants/interfaces';
 
 const opts = {
   jwtFromRequest: ExtractJwt.fromHeader('x-access-token'),
@@ -16,10 +19,11 @@ export class MyAuthStrategyProvider implements Provider<JwtStrategy | undefined>
   constructor(
     @inject(AuthenticationBindings.METADATA)
     private metadata: AuthenticationMetadata,
+    @repository(UsersRepository)
+    private usersRepository : UsersRepository,
   ) {}
 
   value(): ValueOrPromise<JwtStrategy | undefined> {
-    // The function was not decorated, so we shouldn't attempt authentication
     if (!this.metadata) {
       return undefined;
     }
@@ -32,18 +36,16 @@ export class MyAuthStrategyProvider implements Provider<JwtStrategy | undefined>
     }
   }
 
-  verify(
-    jwtPayload: string,
+  verify = (
+    jwtPayload: GeneratedToken,
     cb: (err: Error | null, user?: User | false) => void,
-  ) {
-    const user: User = {
-      id: "test",
-      name: "test",
-      email: "val",
-    };
-    cb(null, user);
-    // find user by name & password
-    // call cb(null, false) when user not found
-    // call cb(null, user) when user is authenticated
+  ) => {
+    this.usersRepository.findById(jwtPayload.id)
+      .then(user => {
+        cb(null, user);
+      })
+      .catch(error => {
+        cb(null, false);
+      });
   }
 }

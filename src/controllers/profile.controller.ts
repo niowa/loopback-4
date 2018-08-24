@@ -1,14 +1,22 @@
-import {Filter, Where, repository} from '@loopback/repository';
+import {repository} from '@loopback/repository';
 import {
   post,
-  param,
   get,
-  patch,
-  del,
-  requestBody
+  requestBody,
+  HttpErrors
 } from '@loopback/rest';
-import {Users} from '../models';
+import {Token, User} from '../constants/interfaces';
 import {UsersRepository} from '../repositories';
+import { v4 as uuid } from 'uuid';
+import * as CryptService from '../services/crypt';
+import * as TokenService from '../services/token';
+import {authenticate, AuthenticationBindings} from '@loopback/authentication';
+import {inject} from '@loopback/context';
+
+interface PasswordData {
+  password: string;
+  key: string;
+}
 
 export class ProfileController {
   constructor(
@@ -17,45 +25,39 @@ export class ProfileController {
   ) {}
 
   @post('/profile')
-  async create(@requestBody() obj: Users)
-    : Promise<Users> {
-    return await this.usersRepository.create(obj);
+  async create(@requestBody() obj: User)
+    : Promise<Token> {
+    const user = await this.usersRepository.findOne({ where: { email: obj.email } });
+    if (user) {
+      throw new HttpErrors.BadRequest('User exists');
+    }
+
+    const passwordData = await CryptService.hashPassword(obj.password);
+    const newUser = {
+      id: uuid(),
+      email: obj.email,
+      password: passwordData.password,
+      key: passwordData.key,
+    };
+
+    await this.usersRepository.create(newUser);
+
+    const token = await TokenService.getJWToken(newUser.id);
+    return { token };
   }
 
-  @get('/profile/count')
-  async count(@param.query.string('where') where?: Where): Promise<number> {
-    return await this.usersRepository.count(where);
-  }
-
+  @authenticate('JwtStrategy')
   @get('/profile')
-  async find(@param.query.string('filter') filter?: Filter)
-    : Promise<Users[]> {
-    return await this.usersRepository.find(filter);
-  }
+  async find(@inject(AuthenticationBindings.CURRENT_USER) user: User | undefined,): Promise<User> {
+    if (!user) {
+      throw new HttpErrors.Unauthorized('Unauthorized');
+    }
+    const formattedUser: User = {
+      id: user.id,
+      email: user.email,
+      created_at: user.created_at,
+    };
 
-  @patch('/profile')
-  async updateAll(
-    @requestBody() obj: Users,
-    @param.query.string('where') where?: Where
-  ): Promise<number> {
-    return await this.usersRepository.updateAll(obj, where);
-  }
-
-  @get('/profile/{id}')
-  async findById(@param.path.string('id') id: string): Promise<Users> {
-    return await this.usersRepository.findById(id);
-  }
-
-  @patch('/profile/{id}')
-  async updateById(
-    @param.path.string('id') id: string,
-    @requestBody() obj: Users
-  ): Promise<boolean> {
-    return await this.usersRepository.updateById(id, obj);
-  }
-
-  @del('/profile/{id}')
-  async deleteById(@param.path.string('id') id: string): Promise<boolean> {
-    return await this.usersRepository.deleteById(id);
+    return formattedUser;
   }
 }
